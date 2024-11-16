@@ -73,7 +73,7 @@ This project proposal presents a comprehensive approach to detecting anomalous t
 
 [7] A. Teymouri, M. Komeili, E. Velazquez, O. Baysal, and M. Genkin, "DATA5000OMBA – Visualizing Data," Carleton University BrightSpace, 2022. [Online]. Available: [https://brightspace.carleton.ca/d2l/le/content/288511/viewContent/3966372/View].
 
-[8] A. Teymouri, M. Komeili, E. Velazquez, O. Baysal, and M. Genkin, "DATA5000OMBA – Machine Learning Introduction," Carleton University BrightSpace, 2022. [Online]. Available: [URL].
+[8] A. Teymouri, M. Komeili, E. Velazquez, O. Baysal, and M. Genkin, "DATA5000OMBA – Machine Learning Introduction," Carleton University BrightSpace, 2022. [Online]. Available: [https://brightspace.carleton.ca/d2l/le/content/288511/viewContent/3966341/View].
 
 [9] A. Teymouri, M. Komeili, E. Velazquez, O. Baysal, and M. Genkin, "DATA5000OMBA – Machine Learning Algorithms - 1," Carleton University BrightSpace, 2022. [Online]. Available: [URL].
 
