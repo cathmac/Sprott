@@ -8,3 +8,12 @@ This project aims to develop a machine learning model to detect anomalous transa
 
 ## 3. Background and Motivation
 The IT Audit team at the publicly-traded company is looking to invest in automated data analytics approaches to streamline their work and focus on higher-value tasks. By developing a machine learning model to detect anomalous transaction patterns in corporate credit card data, the team can reduce the time and effort spent on manual review and investigation of potential issues [3], [4].
+
+## 4. Objectives
+1. Develop a machine learning model that accurately detects anomalous transaction patterns
+2. Create an automated documentation process that meets SOX reporting standards
+3. Provide insights into the most significant variables and relationships in the data
+4. Deploy the model on Amazon SageMaker for integration into the IT Audit team's workflow
+
+## 5. System Architecture
+The proposed system architecture comprises three main components: data preprocessing, model development, and model deployment. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will involve the implementation and evaluation of various machine learning algorithms. The model deployment component will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
