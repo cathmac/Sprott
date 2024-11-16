@@ -85,5 +85,5 @@ This project proposal presents a comprehensive approach to detecting anomalous t
 
 [13] A. Y. Shdefat et al., "Comparative analysis of machine learning models in online payment fraud prediction," in 2024 Intelligent Methods, Systems, and Applications (IMSA), 2024, pp. 243–250. doi: 10.1109/IMSA61967.2024.10652861.
 
-[14] A. Teymouri, M. Komeili, E. Velazquez, O. Baysal, and M. Genkin, "DATA5000OMBA – Role of the Data Scientist," Carleton University BrightSpace, 2022. [Online]. Available: [URL].
+[14] A. Teymouri, M. Komeili, E. Velazquez, O. Baysal, and M. Genkin, "DATA5000OMBA – Role of the Data Scientist," Carleton University BrightSpace, 2022. [Online]. Available: [https://brightspace.carleton.ca/d2l/le/content/288511/viewContent/3966369/View].
 
