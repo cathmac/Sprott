@@ -43,3 +43,9 @@ The proposed system architecture comprises three main components: data preproces
    - Deploy the model using Amazon SageMaker
 ## 7. Timeline
 The project will be completed by December 8, 2024, to align with course requirements. 
+
+## 8. Expected Results
+- A machine learning model that effectively detects anomalous transaction patterns
+- An automated documentation process that meets SOX reporting standards
+- Insights into the most significant variables and relationships in the data
+- A deployed model on Amazon SageMaker, ready for integration into the IT Audit team's workflow
