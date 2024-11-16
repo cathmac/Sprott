@@ -41,3 +41,5 @@ The proposed system architecture comprises three main components: data preproces
 6. Deployment [12]
    - Code the model in Python and store it on GitHub
    - Deploy the model using Amazon SageMaker
+## 7. Timeline
+The project will be completed by December 8, 2024, to align with course requirements. 
