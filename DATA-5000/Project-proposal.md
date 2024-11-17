@@ -17,7 +17,7 @@ The objectives of the proposed project are as follows:
 4. Deploy the model on Amazon SageMaker for integration into the IT Audit team's workflow
 
 ## 5. System Architecture
-The proposed system architecture comprises three main components: data preprocessing, model development, model deployment, and documentation module. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will involve the implementation and evaluation of various machine learning algorithms. The model deployment component alongside documentation module will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
+The proposed system architecture comprises four main components: data preprocessing, model development, model deployment, and documentation module. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will involve the implementation and evaluation of various machine learning algorithms. The model deployment component alongside documentation module will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
 
 ## 6. Methodology
 1. Data Preparation [5], [6]
