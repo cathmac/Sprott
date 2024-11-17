@@ -32,10 +32,10 @@ The project will be completed by December 8, 2024, to align with course requirem
 - Insights into feature importance and relationships in the data
 - A deployed model on Amazon SageMaker, ready for integration into the IT Audit team's workflow
 
-## 9. Limitations and Future Work
-- Ensuring the anonymized or synthetic data adequately represents the original dataset
-- Adapting the automated documentation process to meet SOX reporting standards
+## 9. Future Work
+Following successful completion of this project, its results could be further iterated on to provide more value:
 - Exploring advanced feature engineering techniques and deep learning algorithms for improved performance [13], [14]
+- Adapting the automated documentation process to remove toil in documentation of other busienss processes
 
 ## 10. Conclusion
 This project proposal presents a comprehensive approach to detecting anomalous transaction patterns in corporate credit card data using machine learning techniques. By leveraging state-of-the-art algorithms, automated documentation processes, and cloud-based deployment, the proposed solution aims to enhance the efficiency and effectiveness of the IT Audit team's fraud detection efforts. 
