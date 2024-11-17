@@ -17,31 +17,12 @@ The objectives of the proposed project are as follows:
 4. Deploy the model on Amazon SageMaker for integration into the IT Audit team's workflow
 
 ## 5. System Architecture
-The proposed system architecture comprises four main components: data preprocessing, model development, model deployment, and documentation module. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will evaluation of various machine learning algorithms, and implement most optimal. The model deployment component alongside documentation module will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
+The proposed system architecture comprises four main components: data preprocessing, model development, model deployment, and documentation module. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will evaluate various machine learning algorithms, and implement most optimal. The model deployment component alongside documentation module will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
 
 ## 6. Methodology
-1. Data Preparation [5], [6]
-   - Access the corporate credit card transaction dataset
-   - Anonymize sensitive records or substitute with synthetic data using Python libraries (Faker, DataSynthesizer)
-   - Preprocess data using Python libraries (Pandas, NumPy)
-   - Apply feature engineering techniques, such as feature scaling and encoding categorical variables
-2. Exploratory Data Analysis [7]
-   - Visualize data using Python libraries (Matplotlib, Seaborn)
-   - Compute descriptive statistics and create informative plots
-3. Model Development [8], [9], [10]
-   - Implement supervised learning algorithms using Python libraries (Scikit-learn, TensorFlow)
-   - Apply unsupervised learning techniques using Scikit-learn
-   - Optimize model performance using feature selection and cross-validation
-   - Address potential challenges, such as class imbalance and high-dimensional data
-4. Model Evaluation [11]
-   - Evaluate model performance using metrics from Scikit-learn (accuracy, precision, recall, F1-score, ROC curves)
-   - Assess model generalization ability and balance between bias and variance
-5. Documentation Automation
-   - Develop an automated approach using Python's docstring and libraries (Sphinx, pdoc3)
-   - Ensure documentation meets SOX reporting standards by incorporating specific requirements and guidelines
-6. Deployment [12]
-   - Code the model in Python and store it on GitHub
-   - Deploy the model using Amazon SageMaker
+The methodology for this project involves several key stages, beginning with data preparation [5], [6]. The corporate credit card transaction dataset will be accessed and anonymized to protect sensitive information, using Python libraries such as Faker and DataSynthesizer. Preprocessing steps include data cleaning and transformation with Pandas and NumPy, followed by feature engineering techniques like scaling and encoding categorical variables to ensure the data is ready for analysis. The next phase, exploratory data analysis (EDA), will involve visualizing the dataset and computing descriptive statistics [7]. Tools like Matplotlib will be used to create informative plots and gain insights into data patterns and potential anomalies. This analysis will guide the selection of features and models for the subsequent development stage.In the model development phase, algorithms will be implemented using Scikit-learn and TensorFlow [8], [9], [10]. Techniques such as feature selection and cross-validation will be employed to optimize model performance, while challenges like class imbalance and high-dimensional data will be addressed to enhance robustness. For model evaluation, performance will be assessed using metrics like accuracy, precision, recall, F1-score, and ROC curves, provided by Scikit-learn [11]. The model's generalization ability will also be examined to ensure a balance between bias and variance.
+To meet documentation and compliance requirements, an automated documentation pipeline will be developed using Python tools like pdoc3. This system will adhere to SOX reporting standards by incorporating specific guidelines and ensuring clear, consistent documentation. The project will conclude with deployment [12] using Amazon SageMaker, enabling practical application and scalability for corporate use.
+
 ## 7. Timeline
 The project will be completed by December 8, 2024, to align with course requirements. 
 
