@@ -7,7 +7,7 @@ This project aims to develop a machine learning model to detect specific anomalo
 The rapid growth of the commerce industry has led to an alarming increase in digital fraud and associated losses [1]. Detecting anomalous transaction patterns, such as duplicate payments, fraudulent payments, and transactions that do not follow the company's Delegation of Authority (DOA), is crucial for maintaining a healthy financials of an organization [2]. 
 
 ## 3. Background and Motivation
-The IT Audit team at the publicly-traded company is looking to invest in automated data analytics approaches to streamline their work and focus on higher-value tasks. By developing a machine learning model to detect anomalous transaction patterns in corporate credit card data, the team can reduce the time and effort spent on manual review and investigation of potential issues [3], [4].
+The IT Audit team of a publicly traded company aims to enhance its operational efficiency by adopting automated data analytics techniques. Currently, significant time and resources are dedicated to the manual review and investigation of potential anomalies in corporate credit card transactions, such as duplicate payments and unauthorized expenditures. By developing a machine learning model to identify anomalous transaction patterns, the team seeks to streamline this process, allowing auditors to shift their focus to higher-value tasks, such as risk mitigation and strategic decision-making [3], [4]. This initiative aligns with the broader industry trend of leveraging advanced analytics to improve audit accuracy and reduce operational overhead.
 
 ## 4. Objectives
 1. Develop a machine learning model that accurately detects anomalous transaction patterns
@@ -16,7 +16,7 @@ The IT Audit team at the publicly-traded company is looking to invest in automat
 4. Deploy the model on Amazon SageMaker for integration into the IT Audit team's workflow
 
 ## 5. System Architecture
-The proposed system architecture comprises three main components: data preprocessing, model development, and model deployment. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will involve the implementation and evaluation of various machine learning algorithms. The model deployment component will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
+The proposed system architecture comprises three main components: data preprocessing, model development, model deployment, and documentation module. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will involve the implementation and evaluation of various machine learning algorithms. The model deployment component alongside documentation module will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
 
 ## 6. Methodology
 1. Data Preparation [5], [6]
