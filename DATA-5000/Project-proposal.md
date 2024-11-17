@@ -10,6 +10,7 @@ The rapid growth of the commerce industry has led to an alarming increase in dig
 The IT Audit team of a publicly traded company aims to enhance its operational efficiency by adopting automated data analytics techniques. Currently, significant time and resources are dedicated to the manual review and investigation of potential anomalies in corporate credit card transactions, such as duplicate payments and unauthorized expenditures. By developing a machine learning model to identify anomalous transaction patterns, the team seeks to streamline this process, allowing auditors to shift their focus to higher-value tasks, such as risk mitigation and strategic decision-making [3], [4]. This initiative aligns with the broader industry trend of leveraging advanced analytics to improve audit accuracy and reduce operational overhead.
 
 ## 4. Objectives
+The objectives of the proposed project are as follows: 
 1. Develop a machine learning model that accurately detects anomalous transaction patterns
 2. Create an automated documentation process that meets SOX reporting standards
 3. Provide insights into the most significant variables and relationships in the data
