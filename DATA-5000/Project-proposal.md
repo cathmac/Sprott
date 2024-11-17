@@ -29,7 +29,7 @@ The project will be completed by December 8, 2024, to align with course requirem
 ## 8. Expected Results
 - A machine learning model that effectively detects anomalous transaction patterns
 - An automated documentation process that meets SOX reporting standards
-- Insights into the most significant variables and relationships in the data
+- Insights into feature importance and relationships in the data
 - A deployed model on Amazon SageMaker, ready for integration into the IT Audit team's workflow
 
 ## 9. Limitations and Future Work
