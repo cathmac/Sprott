@@ -1,10 +1,10 @@
-# Project Title: Anomaly Detection in Corporate Credit Card Transactions using Machine Learning
+# Anomaly Detection in Corporate Credit Card Transactions using Machine Learning
 
-## 1. Introduction
-The rapid growth of the commerce industry has led to an alarming increase in digital fraud and associated losses [1]. Detecting anomalous transaction patterns, such as duplicate payments, fraudulent payments, and transactions that do not follow the company's Delegation of Authority (DOA), is crucial for maintaining a healthy financials of an organization [2]. 
-
-## 2. Abstract
+## 1. Abstract
 This project aims to develop a machine learning model to detect anomalous transaction patterns, such as duplicate payments, fraudulent payments, and transactions that do not follow the company's Delegation of Authority (DOA). The model will be trained on an anonymized or synthetic dataset to protect sensitive information. An automated documentation process will be created to meet SOX reporting standards. The model will be coded in Python, stored on GitHub, and deployed using Amazon SageMaker.
+
+## 2. Introduction
+The rapid growth of the commerce industry has led to an alarming increase in digital fraud and associated losses [1]. Detecting anomalous transaction patterns, such as duplicate payments, fraudulent payments, and transactions that do not follow the company's Delegation of Authority (DOA), is crucial for maintaining a healthy financials of an organization [2]. 
 
 ## 3. Background and Motivation
 The IT Audit team at the publicly-traded company is looking to invest in automated data analytics approaches to streamline their work and focus on higher-value tasks. By developing a machine learning model to detect anomalous transaction patterns in corporate credit card data, the team can reduce the time and effort spent on manual review and investigation of potential issues [3], [4].
