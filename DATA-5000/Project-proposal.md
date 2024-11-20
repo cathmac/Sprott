@@ -9,12 +9,12 @@ The rapid growth of the commerce industry has led to an alarming increase in dig
 ## Background and Motivation
 The IT Audit team of a publicly traded company aims to enhance its operational efficiency by adopting automated data analytics techniques. Currently, significant time and resources are dedicated to the manual review and investigation of potential anomalies in corporate credit card transactions, such as duplicate payments and unauthorized expenditures. By developing a machine learning model to identify anomalous transaction patterns, the team seeks to streamline this process, allowing auditors to shift their focus to higher-value tasks, such as risk mitigation and strategic decision-making [3], [4]. This initiative aligns with the broader industry trend of leveraging advanced analytics to improve audit accuracy and reduce operational overhead.
 
-## 4. Objectives
+## Objectives
 The objectives of the proposed project are as follows: 
-1. Develop a machine learning model that accurately detects anomalous transaction patterns
-2. Create an automated documentation process that meets SOX reporting standards
-3. Provide insights into the most significant variables and relationships in the data
-4. Deploy the model on Amazon SageMaker for integration into the IT Audit team's workflow
+1.	Develop a machine learning model that accurately detects anomalous transaction patterns 
+2.	Create an automated documentation process that meets SOX reporting standards 
+3.	Provide insights into the most significant variables and relationships in the data 
+4.	Deploy the model on Amazon SageMaker for integration into the IT Audit team’s workflow
 
 ## 5. System Architecture
 The proposed system architecture comprises four main components: data preprocessing, model development, model deployment, and documentation module. The data preprocessing component will handle data cleaning, anonymization, and feature engineering. The model development component will evaluate various machine learning algorithms, and implement most optimal. The model deployment component alongside documentation module will focus on integrating the trained model into the IT Audit team's workflow using Amazon SageMaker.
