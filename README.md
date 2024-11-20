@@ -8,6 +8,6 @@ While most of my coursework focused on the Management and Change concentration, 
 - negotiations, 
 - leadership principles and managing teams, 
 
-and many, many more! I also chose to complete a few electives from the Business Analytics conceentration, particulary around project management, business analytics and data science seminar. 
+and many, many more! I also chose to complete a few electives from the Business Analytics concentration, particulary around project management, business analytics and data science. 
 
 This repository houses the coursework I chose to share publicly, plus my occassional tinkering around.
