@@ -3,7 +3,7 @@
 ## Abstract
 This project aims to develop a machine learning model to detect specific anomalous transaction patterns, such as duplicate payments (e.g., identical transactions processed multiple times), fraudulent activities (e.g., unauthorized or suspicious account activity), and violations of Delegation of Authority (DOA) policies (e.g., approvals exceeding role-based limits) for a publicly traded company. The model will be trained on a diverse, synthetic dataset simulating real-world transactional scenarios to ensure privacy and accuracy. An automated documentation pipeline will be implemented to generate comprehensive audit documentation to meet Sarbanes-Oxley (SOX) compliance requirements, while reducing toil for users of the model, the company’s internal auditors. The model will be coded in Python, stored on GitHub, and deployed using Amazon SageMaker. Performance evaluation will focus on metrics such as accuracy, precision, and recall, with ongoing monitoring to adapt to evolving transaction patterns.
 
-## 2. Introduction
+## Introduction
 The rapid growth of the commerce industry has led to an alarming increase in digital fraud and associated losses [1]. Detecting anomalous transaction patterns, such as duplicate payments, fraudulent payments, and transactions that do not follow the company's Delegation of Authority (DOA), is crucial for maintaining a healthy financials of an organization [2]. 
 
 ## 3. Background and Motivation
