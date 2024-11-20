@@ -30,10 +30,10 @@ For model evaluation, performance will be assessed using metrics like accuracy, 
 
 To meet documentation and compliance requirements, an automated documentation pipeline will be developed using Python tools like pdoc3. This system will adhere to SOX reporting standards by incorporating specific guidelines and ensuring clear, consistent documentation. The project will conclude with deployment [12] using Amazon SageMaker, enabling practical application and scalability for corporate use.
 
-## 7. Timeline
+## Timeline
 The project will be completed by December 8, 2024, to align with course requirements. 
 
-## 8. Expected Results
+## Expected Results
 Following are the expected results for this project:
 
 1.	A machine learning model that effectively detects anomalous transaction patterns
@@ -42,17 +42,17 @@ Following are the expected results for this project:
 4.	A deployed model on Amazon SageMaker, ready for integration into the IT Audit team’s workflow
 
 
-## 9. Future Work
+## Future Work
 Following successful completion of this project, its results could be further iterated on to provide more value: 
 
 - Exploring advanced feature engineering techniques and deep learning algorithms for improved performance [13], [14].
-- Adapting the automated documentation process to remove toil in documentation of other busienss processes
+
+- Adapting the automated documentation process to remove toil in documentation of other busienss processes.
 
 
-## 10. Conclusion
+## Conclusion
 This project proposal presents a comprehensive approach to detecting anomalous transaction patterns in corporate credit card data using machine learning techniques. By leveraging state-of-the-art algorithms, automated documentation processes, and cloud-based deployment, the proposed solution aims to enhance the efficiency and effectiveness of the IT Audit team’s assurance efforts.
  
-. 
 
 ## References
 [1] A. Herreros-Martínez, R. Magdalena-Benedicto, J. Vila-Francés, A. J. Serrano-López, and S. Pérez-Díaz, "Applied machine learning to anomaly detection in enterprise purchase processes," arXiv:2405.14754 [cs], May 2023, doi: 10.48550/arXiv.2405.14754.
