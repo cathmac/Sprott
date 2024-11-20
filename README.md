@@ -10,4 +10,4 @@ While most of my coursework focused on the Management and Change concentration, 
 
 and many, many more! I also chose to complete a few electives from the Business Analytics conceentration, particulary around project management, business analytics and data science seminar. 
 
-This repository houses the coursework I chose to share publicly, plus my occassional tinkering. 
+This repository houses the coursework I chose to share publicly, plus my occassional tinkering around.
