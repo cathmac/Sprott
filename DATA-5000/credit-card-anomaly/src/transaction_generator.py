@@ -129,7 +129,7 @@ class TransactionGenerator:
                 delay = timedelta(seconds=random.randint(5, 55))
             elif pattern_type == 'delayed':
                 delay = timedelta(hours=random.randint(48, 168))
-            elif pattern_type == 'off_hours':
+             elif pattern_type == 'off_hours':
                 delay = timedelta(hours=random.randint(1, 24))
                 base_timestamp = transaction_timestamp + delay
                 approval_timestamp = base_timestamp.replace(
