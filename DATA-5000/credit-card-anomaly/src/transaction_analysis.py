@@ -155,3 +155,4 @@ def save_analysis_results(df, output_file='transaction_analysis_report.txt'):
         sys.stdout = f
         analyze_transactions(df)
         sys.stdout = original_stdout
+        
