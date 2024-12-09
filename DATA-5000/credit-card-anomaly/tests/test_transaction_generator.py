@@ -62,4 +62,4 @@ class TestTransactionGenerator(unittest.TestCase):
         anomaly_count = len(df[df['is_anomaly']])
         
         # Allow for some random variation (±1%)
-        self.assertTrue(45 <= anomaly_count <= 55
+        self.assertTrue(45 <= anomaly_count <= 55)
