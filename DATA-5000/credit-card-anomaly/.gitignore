@@ -13,10 +13,3 @@ ENV/
 .idea/
 *.swp
 *.swo
-
-# Project specific
-transaction_analysis_output/
-*.csv
-*.png
-*.txt
-!requirements.txt
