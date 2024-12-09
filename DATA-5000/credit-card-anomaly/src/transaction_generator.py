@@ -133,7 +133,7 @@ class TransactionGenerator:
                 delay = timedelta(hours=random.randint(1, 24))
                 base_timestamp = transaction_timestamp + delay
                 approval_timestamp = base_timestamp.replace(
-                    hour=random.randint(23, 24) if random.random() < 0.5 else random.randint(0, 4),
+                    hour=random.randint(0, 23) if random.random() < 0.5 else random.randint(0, 4),
                     minute=random.randint(0, 59)
                 )
                 return approval_timestamp
@@ -239,7 +239,7 @@ class TransactionGenerator:
             transaction['timestamp'] += timedelta(minutes=random.randint(1, 60))
         elif anomaly_type == 'unusual_time':
             transaction['timestamp'] = transaction['timestamp'].replace(
-                hour=random.randint(22, 23),
+                hour=random.randint(0, 23),
                 minute=random.randint(0, 59)
             )
         elif anomaly_type == 'split_transaction':
