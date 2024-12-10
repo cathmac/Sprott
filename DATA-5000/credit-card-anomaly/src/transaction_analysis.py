@@ -1,158 +1,140 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from datetime import datetime, timedelta
-import sys
+import logging
 
 def analyze_transactions(df):
-    """Analyze transaction and approval patterns."""
-    # Convert timestamps to datetime
-    df['timestamp'] = pd.to_datetime(df['timestamp'])
-    df['approval_timestamp'] = pd.to_datetime(df['approval_timestamp'])
+    """
+    Performs basic transaction analysis and generates visualizations.
     
-    # Basic Transaction Statistics
-    print("\n=== Basic Transaction Statistics ===")
-    print(f"Total Transactions: {len(df):,}")
-    print(f"Date Range: {df['timestamp'].min()} to {df['timestamp'].max()}")
-    print(f"Number of Unique Employees: {df['employee_id'].nunique():,}")
-    print(f"Total Amount (USD): ${df['usd_amount'].sum():,.2f}")
-    print(f"Average Transaction Amount: ${df['usd_amount'].mean():,.2f}")
+    Parameters:
+    - df (pd.DataFrame): Processed transaction DataFrame.
     
-    # Transaction Distribution
-    print("\n=== Transaction Distribution ===")
-    print("\nTransaction Types:")
-    print(df['transaction_type'].value_counts())
-    print("\nCurrency Distribution:")
-    print(df['currency'].value_counts())
-    print("\nMerchant Regions:")
-    print(df['merchant_region'].value_counts())
+    Returns:
+    - matplotlib.figure.Figure: The generated plot figure.
+    """
+    logger = logging.getLogger("TransactionAnalysis")
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+    handler.setFormatter(formatter)
+    if not logger.handlers:
+        logger.addHandler(handler)
     
-    # Anomaly Analysis
-    print("\n=== Anomaly Analysis ===")
-    print(f"Normal Transactions: {len(df[~df['is_anomaly']]):,}")
-    print(f"Anomalous Transactions: {len(df[df['is_anomaly']]):,}")
-    print(f"Anomaly Rate: {len(df[df['is_anomaly']]) / len(df):.2%}")
+    logger.info("Starting transaction analysis...")
     
-    if len(df[df['is_anomaly']]) > 0:
-        print("\nAnomaly Types:")
-        print(df[df['is_anomaly']]['anomaly_type'].value_counts())
-    
-    # Approval Analysis
-    approved_txns = df[df['approval_timestamp'].notna()].copy()
-    if len(approved_txns) > 0:
-        approved_txns['approval_delay'] = (
-            approved_txns['approval_timestamp'] - 
-            approved_txns['timestamp']
-        ).dt.total_seconds() / 3600
-        
-        print("\n=== Approval Analysis ===")
-        print(f"Transactions Requiring Approval: {len(df[df['needs_approval']]):,}")
-        print(f"Transactions with Approvals: {len(approved_txns):,}")
-        print(f"Self-Approved Transactions: {len(df[df['self_approved']]):,}")
-        
-        print(f"\nApproval Timing:")
-        print(f"Average Approval Delay: {approved_txns['approval_delay'].mean():.2f} hours")
-        print(f"Median Approval Delay: {approved_txns['approval_delay'].median():.2f} hours")
-        
-        # Analyze approval patterns
-        approved_txns['approval_hour'] = approved_txns['approval_timestamp'].dt.hour
-        approved_txns['approval_day'] = approved_txns['approval_timestamp'].dt.day_name()
-        
-        print("\nApprovals by Day:")
-        print(approved_txns['approval_day'].value_counts())
-        
-        # Off-hours approvals
-        off_hours = approved_txns[
-            (approved_txns['approval_hour'] >= 23) | 
-            (approved_txns['approval_hour'] <= 4)
-        ]
-        print(f"\nOff-Hours Approvals (11PM-4AM): {len(off_hours):,}")
-        
-        # Weekend approvals
-        weekend = approved_txns[approved_txns['approval_timestamp'].dt.dayofweek >= 5]
-        print(f"Weekend Approvals: {len(weekend):,}")
-    
-    return create_visualizations(df, approved_txns)
-
-def create_visualizations(df, approved_txns):
-    """Create visualizations for transaction patterns."""
-    fig = plt.figure(figsize=(20, 15))
-    fig.suptitle('Transaction Analysis Dashboard', fontsize=16, y=0.95)
-    
-    # Create subplot grid
-    gs = plt.GridSpec(3, 3, figure=fig)
-    
-    # 1. Transaction amounts by type
-    ax1 = fig.add_subplot(gs[0, 0])
-    sns.boxplot(data=df, x='transaction_type', y='usd_amount', ax=ax1)
-    ax1.set_title('Transaction Amounts by Type')
-    ax1.set_ylabel('Amount (USD)')
-    ax1.tick_params(axis='x', rotation=45)
-    
-    # 2. Transactions by merchant region
-    ax2 = fig.add_subplot(gs[0, 1])
-    region_counts = df['merchant_region'].value_counts()
-    sns.barplot(x=region_counts.index, y=region_counts.values, ax=ax2)
-    ax2.set_title('Transactions by Region')
-    ax2.tick_params(axis='x', rotation=45)
-    
+    # Example analyses:
+    # 1. Basic statistics
+    # 2. Distribution of transaction types
     # 3. Currency distribution
-    ax3 = fig.add_subplot(gs[0, 2])
-    currency_counts = df['currency'].value_counts()
-    sns.barplot(x=currency_counts.index, y=currency_counts.values, ax=ax3)
-    ax3.set_title('Transactions by Currency')
-    ax3.tick_params(axis='x', rotation=45)
+    # 4. Merchant regions distribution
+    # 5. Anomaly analysis
+    # 6. Approval analysis
     
-    # 4. Anomaly distribution
-    ax4 = fig.add_subplot(gs[1, 0])
-    anomaly_counts = df[df['is_anomaly']]['anomaly_type'].value_counts()
-    sns.barplot(x=anomaly_counts.index, y=anomaly_counts.values, ax=ax4)
-    ax4.set_title('Distribution of Anomaly Types')
-    ax4.tick_params(axis='x', rotation=45)
+    fig, axes = plt.subplots(3, 2, figsize=(15, 18))
+    fig.suptitle('Transaction Analysis', fontsize=20)
     
-    # 5. Transactions by department
-    ax5 = fig.add_subplot(gs[1, 1])
-    dept_counts = df['department'].value_counts()
-    sns.barplot(x=dept_counts.index, y=dept_counts.values, ax=ax5)
-    ax5.set_title('Transactions by Department')
-    ax5.tick_params(axis='x', rotation=45)
+    # 1. Basic Transaction Statistics
+    axes[0, 0].text(0.1, 0.9, f"Total Transactions: {len(df):,}", fontsize=12)
+    axes[0, 0].text(0.1, 0.8, f"Date Range: {df['timestamp'].min()} to {df['timestamp'].max()}", fontsize=12)
+    axes[0, 0].text(0.1, 0.7, f"Number of Unique Employees: {df['employee_id'].nunique():,}", fontsize=12)
+    axes[0, 0].text(0.1, 0.6, f"Total Amount (USD): ${df['usd_amount'].sum():,.2f}", fontsize=12)
+    axes[0, 0].text(0.1, 0.5, f"Average Transaction Amount: ${df['usd_amount'].mean():.2f}", fontsize=12)
+    axes[0, 0].axis('off')
     
-    # 6. Transactions by role
-    ax6 = fig.add_subplot(gs[1, 2])
-    role_counts = df['employee_role'].value_counts()
-    sns.barplot(x=role_counts.index, y=role_counts.values, ax=ax6)
-    ax6.set_title('Transactions by Employee Role')
-    ax6.tick_params(axis='x', rotation=45)
+    # 2. Transaction Types Distribution
+    sns.countplot(ax=axes[0, 1], x='transaction_type', data=df, order=df['transaction_type'].value_counts().index)
+    axes[0, 1].set_title('Transaction Types')
+    axes[0, 1].set_xlabel('Transaction Type')
+    axes[0, 1].set_ylabel('Count')
     
-    if len(approved_txns) > 0:
-        # 7. Approval delays histogram
-        ax7 = fig.add_subplot(gs[2, 0])
-        sns.histplot(data=approved_txns, x='approval_delay', bins=50, ax=ax7)
-        ax7.set_title('Distribution of Approval Delays')
-        ax7.set_xlabel('Delay (hours)')
-        
-        # 8. Approvals by hour of day
-        ax8 = fig.add_subplot(gs[2, 1])
-        hour_counts = approved_txns['approval_hour'].value_counts().sort_index()
-        sns.barplot(x=hour_counts.index, y=hour_counts.values, ax=ax8)
-        ax8.set_title('Approvals by Hour of Day')
-        ax8.set_xlabel('Hour')
-        
-        # 9. Approvals by day of week
-        ax9 = fig.add_subplot(gs[2, 2])
-        day_counts = approved_txns['approval_day'].value_counts()
-        sns.barplot(x=day_counts.index, y=day_counts.values, ax=ax9)
-        ax9.set_title('Approvals by Day of Week')
-        ax9.tick_params(axis='x', rotation=45)
+    # 3. Currency Distribution
+    sns.countplot(ax=axes[1, 0], x='currency', data=df, order=df['currency'].value_counts().index)
+    axes[1, 0].set_title('Currency Distribution')
+    axes[1, 0].set_xlabel('Currency')
+    axes[1, 0].set_ylabel('Count')
     
-    plt.tight_layout()
+    # 4. Merchant Regions Distribution
+    sns.countplot(ax=axes[1, 1], x='merchant_region', data=df, order=df['merchant_region'].value_counts().index)
+    axes[1, 1].set_title('Merchant Regions')
+    axes[1, 1].set_xlabel('Merchant Region')
+    axes[1, 1].set_ylabel('Count')
+    
+    # 5. Anomaly Analysis
+    sns.countplot(ax=axes[2, 0], x='is_anomaly', data=df)
+    axes[2, 0].set_title('Anomaly Analysis')
+    axes[2, 0].set_xlabel('Is Anomaly')
+    axes[2, 0].set_ylabel('Count')
+    axes[2, 0].set_xticks([0, 1])  # Ensure fixed number of ticks
+    axes[2, 0].set_xticklabels(['Normal', 'Anomalous'])
+    
+    # 6. Approval Analysis
+    approval_counts = df['needs_approval'].value_counts()
+    sns.barplot(ax=axes[2, 1], x=approval_counts.index.astype(str), y=approval_counts.values)
+    axes[2, 1].set_title('Transactions Requiring Approval')
+    axes[2, 1].set_xlabel('Requires Approval')
+    axes[2, 1].set_ylabel('Count')
+    axes[2, 1].set_xticks([0, 1])  # Ensure fixed number of ticks
+    axes[2, 1].set_xticklabels(['No', 'Yes'])
+    
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    logger.info("Transaction analysis completed.")
     return fig
 
-def save_analysis_results(df, output_file='transaction_analysis_report.txt'):
-    """Save analysis results to a file."""
-    original_stdout = sys.stdout
-    with open(output_file, 'w') as f:
-        sys.stdout = f
-        analyze_transactions(df)
-        sys.stdout = original_stdout
+def save_analysis_results(df, report_file):
+    """
+    Saves analysis results to a text file.
+    
+    Parameters:
+    - df (pd.DataFrame): Processed transaction DataFrame.
+    - report_file (str): Path to the report text file.
+    """
+    logger = logging.getLogger("TransactionAnalysis")
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+    handler.setFormatter(formatter)
+    if not logger.handlers:
+        logger.addHandler(handler)
+    
+    logger.info("Saving analysis results...")
+    
+    with open(report_file, 'w') as f:
+        f.write("=== Basic Transaction Statistics ===\n")
+        f.write(f"Total Transactions: {len(df):,}\n")
+        f.write(f"Date Range: {df['timestamp'].min()} to {df['timestamp'].max()}\n")
+        f.write(f"Number of Unique Employees: {df['employee_id'].nunique():,}\n")
+        f.write(f"Total Amount (USD): ${df['usd_amount'].sum():,.2f}\n")
+        f.write(f"Average Transaction Amount: ${df['usd_amount'].mean():.2f}\n\n")
         
+        f.write("=== Transaction Distribution ===\n\n")
+        
+        f.write("Transaction Types:\n")
+        f.write(f"{df['transaction_type'].value_counts()}\n\n")
+        
+        f.write("Currency Distribution:\n")
+        f.write(f"{df['currency'].value_counts()}\n\n")
+        
+        f.write("Merchant Regions:\n")
+        f.write(f"{df['merchant_region'].value_counts()}\n\n")
+        
+        f.write("=== Anomaly Analysis ===\n")
+        normal = len(df[~df['is_anomaly']])
+        anomalous = len(df[df['is_anomaly']])
+        anomaly_rate = (anomalous / len(df)) * 100
+        f.write(f"Normal Transactions: {normal:,}\n")
+        f.write(f"Anomalous Transactions: {anomalous:,}\n")
+        f.write(f"Anomaly Rate: {anomaly_rate:.2f}%\n\n")
+        
+        f.write("Anomaly Types:\n")
+        f.write(f"{df['anomaly_type'].value_counts(dropna=True)}\n\n")
+        
+        f.write("=== Approval Analysis ===\n")
+        approval_required = len(df[df['needs_approval']])
+        approvals = len(df[df['approver_id'] != 'NONE'])
+        self_approved = len(df[df['self_approved']])
+        f.write(f"Transactions Requiring Approval: {approval_required:,}\n")
+        f.write(f"Transactions with Approvals: {approvals:,}\n")
+        f.write(f"Self-Approved Transactions: {self_approved:,}\n")
+    
+    logger.info(f"Analysis results saved to: {report_file}")

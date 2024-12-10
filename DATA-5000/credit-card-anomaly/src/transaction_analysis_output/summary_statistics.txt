@@ -1,9 +1,11 @@
 === Transaction Analysis Summary ===
 
 Total Transactions: 25,000
-Total Amount (USD): $362,109,434.40
-Unique Employees: 3,000
+Total Amount (USD): $523,607,620.01
+Unique Employees: 2,999
 Normal Transactions: 23,750
 Anomalous Transactions: 1,250
-Transactions Needing Approval: 24,538
-Self-Approved Transactions: 1,517
+Transactions Needing Approval: 12,478
+Self-Approved Transactions: 12,615
+High-Risk Transactions: 24,592
+Model ROC AUC: $0.51
