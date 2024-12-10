@@ -69,12 +69,15 @@ class AnomalyDetectionModel:
             'classification_report': classification_report(y_test, y_pred, output_dict=True),
             'confusion_matrix': confusion_matrix(y_test, y_pred),
             'roc_auc': roc_auc,
+            'fpr': fpr,
+            'tpr': tpr,
             'cv_scores': cv_scores,
             'feature_importance': self.feature_importance
         }
     
-    def plot_results(self, results, output_dir='model_output'):
+    def plot_results(self, results):
         """Plot evaluation results."""
+        output_dir = 'model_output'
         os.makedirs(output_dir, exist_ok=True)
         
         # Create figure with subplots
@@ -92,7 +95,11 @@ class AnomalyDetectionModel:
         
         # Plot ROC curve
         axes[0, 1].plot([0, 1], [0, 1], 'k--')
-        axes[0, 1].plot(fpr, tpr, label=f'ROC (AUC = {results["roc_auc"]:.2f})')
+        axes[0, 1].plot(
+            results['fpr'], 
+            results['tpr'], 
+            label=f'ROC (AUC = {results["roc_auc"]:.2f})'
+        )
         axes[0, 1].set_xlabel('False Positive Rate')
         axes[0, 1].set_ylabel('True Positive Rate')
         axes[0, 1].set_title('ROC Curve')
