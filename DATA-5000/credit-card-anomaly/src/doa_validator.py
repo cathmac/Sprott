@@ -95,7 +95,7 @@ class DOAValidator:
         violations = []
         
         # Convert timestamp to EST
-        tx_time = pd.to_datetime(transaction['timestamp']).tz_localize(pytz.UTC).tz_convert(self.est_tz)
+        import pandas as pd
         
         # Check role-based limits
         if not self._check_role_limit(transaction):
