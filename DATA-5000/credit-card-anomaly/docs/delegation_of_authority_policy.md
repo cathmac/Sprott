@@ -71,4 +71,4 @@ Mandatory Approval Thresholds:
 
 # 6. Emergency Procedures
 
-E- mergency purchases outside limits require post-transaction review within 24 hours
+- Emergency purchases outside limits require post-transaction review within 24 hours
