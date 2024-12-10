@@ -1,34 +1,37 @@
-
 === Basic Transaction Statistics ===
 Total Transactions: 25,000
-Date Range: 2024-01-03 00:20:35 to 2024-12-05 22:49:33
-Number of Unique Employees: 3,000
-Total Amount (USD): $362,109,434.40
-Average Transaction Amount: $14,484.38
+Date Range: 2024-01-03 00:05:18 to 2024-12-05 23:55:01
+Number of Unique Employees: 2,999
+Total Amount (USD): $523,607,620.01
+Average Transaction Amount: $20944.30
 
 === Transaction Distribution ===
 
 Transaction Types:
 transaction_type
-PURCHASE    22469
-REFUND       2531
+Refund        6318
+Withdrawal    6261
+Purchase      6255
+Transfer      6166
 Name: count, dtype: int64
 
 Currency Distribution:
 currency
-USD    6396
-CAD    6218
-GBP    6145
-EUR    3133
-PLN    3108
+GBP    5039
+EUR    5036
+USD    5024
+CAD    4997
+JPY    4904
 Name: count, dtype: int64
 
 Merchant Regions:
 merchant_region
-US        6396
-Europe    6241
-Canada    6218
-UK        6145
+Africa           4235
+South America    4199
+Asia             4173
+Europe           4151
+Australia        4121
+North America    4121
 Name: count, dtype: int64
 
 === Anomaly Analysis ===
@@ -38,32 +41,13 @@ Anomaly Rate: 5.00%
 
 Anomaly Types:
 anomaly_type
-unusual_time               273
-unusual_merchant           253
-split_transaction          250
-self_approval_violation    241
-duplicate                  233
+Time Anomaly        327
+Amount Spike        309
+Category Anomaly    308
+Merchant Anomaly    306
 Name: count, dtype: int64
 
 === Approval Analysis ===
-Transactions Requiring Approval: 24,538
-Transactions with Approvals: 24,787
-Self-Approved Transactions: 1,517
-
-Approval Timing:
-Average Approval Delay: 29.44 hours
-Median Approval Delay: 23.01 hours
-
-Approvals by Day:
-approval_day
-Monday       10249
-Thursday      3503
-Wednesday     3502
-Friday        3487
-Tuesday       3459
-Saturday       398
-Sunday         189
-Name: count, dtype: int64
-
-Off-Hours Approvals (11PM-4AM): 421
-Weekend Approvals: 587
+Transactions Requiring Approval: 12,478
+Transactions with Approvals: 22,533
+Self-Approved Transactions: 12,615

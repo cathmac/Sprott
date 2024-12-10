@@ -1,276 +1,200 @@
 import pandas as pd
 import numpy as np
+import logging
 from datetime import datetime, timedelta
 import random
 
 class TransactionGenerator:
-    def __init__(self, start_date='2024-01-03', end_date='2024-12-06', num_employees=3000):
-        self.start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        self.end_date = datetime.strptime(end_date, '%Y-%m-%d')
+    def __init__(self, start_date, end_date, num_employees, seed=None):
+        """
+        Initializes the TransactionGenerator with date range and employee pool.
+        
+        Parameters:
+        - start_date (str): Start date in 'YYYY-MM-DD' format.
+        - end_date (str): End date in 'YYYY-MM-DD' format.
+        - num_employees (int): Number of unique employees.
+        - seed (int, optional): Random seed for reproducibility.
+        """
+        self.start_date = pd.to_datetime(start_date)
+        self.end_date = pd.to_datetime(end_date)
         self.num_employees = num_employees
+        self.employee_ids = [f"EMP{str(i).zfill(4)}" for i in range(1, num_employees + 1)]
+        self.roles = ['ENG-JR', 'ENG-SR', 'TECH-LEAD', 'ENG-MGR', 'DIR', 'VP', 'EXEC', 'CEO', 'BOARD']
+        self.departments = ['Software', 'Hardware', 'Cloud Services', 'Office Supplies', 'Training']
+        self.merchants = ['AWS', 'GitHub', 'Microsoft', 'Dell', 'Apple', 'JetBrains', 'Atlassian', 'UnknownMerchant1', 'UnknownMerchant2']
+        self.merchant_regions = ['North America', 'Europe', 'Asia', 'South America', 'Africa', 'Australia']
+        self.categories = ['Software', 'Hardware', 'Cloud Services', 'Office Supplies', 'Training', 'UnknownCategory1', 'UnknownCategory2']
+        self.mcc_codes = [5411, 5812, 5732, 5944, 4789]  # Example MCC codes
+        self.currencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD']
+        self.transaction_types = ['Purchase', 'Withdrawal', 'Refund', 'Transfer']
+        self.transaction_countries = ['USA', 'Germany', 'UK', 'Japan', 'Canada']
+        self.merchant_countries = ['USA', 'Germany', 'UK', 'Japan', 'Canada', 'UnknownCountry1', 'UnknownCountry2']
+        self.seed = seed
+        if seed is not None:
+            np.random.seed(seed)
+            random.seed(seed)
         
-        # Define currencies and exchange rates
-        self.currencies = {
-            'USD': 1.0, 'CAD': 0.74, 'EUR': 1.09, 'GBP': 1.27, 'PLN': 0.25
-        }
+        # Initialize logger
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.setLevel(logging.DEBUG)  # Set to DEBUG for detailed logs
+        handler = logging.StreamHandler()
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+        handler.setFormatter(formatter)
+        if not self.logger.handlers:
+            self.logger.addHandler(handler)
+    
+    def generate_dataset(self, num_transactions, anomaly_ratio=0.05):
+        """
+        Generates a synthetic dataset of credit card transactions.
         
-        # Define MCC codes
-        self.mcc_codes = {
-            '4816': 'Computer Network Services',
-            '5045': 'Computers and Software',
-            '5734': 'Software Stores',
-            '7372': 'Programming Services',
-            '5111': 'Office Supplies',
-            '4814': 'Telecommunications',
-            '5968': 'Subscription Services',
-            '3000-3299': 'Airlines',
-            '7011': 'Hotels and Lodging',
-            '4121': 'Ground Transportation',
-            '5811': 'Catering Services',
-            '5812': 'Restaurants',
-            '5399': 'General Merchandise'
-        }
+        Parameters:
+        - num_transactions (int): Number of transactions to generate.
+        - anomaly_ratio (float): Proportion of transactions that are anomalous.
         
-        # Regional merchants
-        self.merchants = {
-            'Cloud Services': {
-                'US': ['AWS Amazon', 'Microsoft Azure US', 'Google Cloud US'],
-                'Canada': ['AWS Canada', 'Microsoft Azure Canada', 'Google Cloud Canada'],
-                'Europe': ['AWS EU', 'Microsoft Azure EU', 'Google Cloud EU'],
-                'UK': ['AWS UK', 'Microsoft Azure UK', 'Google Cloud UK']
-            },
-            'Software': {
-                'US': ['GitHub Enterprise', 'Atlassian US', 'JetBrains US', 'Adobe US'],
-                'Canada': ['GitHub Canada', 'Atlassian Canada', 'JetBrains Canada', 'Adobe Canada'],
-                'Europe': ['GitHub EU', 'Atlassian EU', 'JetBrains EU', 'Adobe EU'],
-                'UK': ['GitHub UK', 'Atlassian UK', 'JetBrains UK', 'Adobe UK']
-            },
-            'Hardware': {
-                'US': ['Dell US', 'Apple Business US', 'Lenovo US'],
-                'Canada': ['Dell Canada', 'Apple Business Canada', 'Lenovo Canada'],
-                'Europe': ['Dell EU', 'Apple Business EU', 'Lenovo EU'],
-                'UK': ['Dell UK', 'Apple Business UK', 'Lenovo UK']
-            },
-            'Office Supplies': {
-                'US': ['Staples US', 'Office Depot US', 'Amazon Business US'],
-                'Canada': ['Staples Canada', 'Grand & Toy', 'Amazon Business Canada'],
-                'Europe': ['Viking Direct EU', 'Amazon Business EU'],
-                'UK': ['Viking Direct UK', 'Ryman Business', 'Amazon Business UK']
-            },
-            'Travel': {
-                'US': ['United Airlines', 'American Airlines', 'Marriott US', 'Hilton US'],
-                'Canada': ['Air Canada', 'WestJet', 'Fairmont Hotels', 'Delta Hotels'],
-                'Europe': ['Lufthansa', 'Air France', 'NH Hotels', 'Accor Hotels'],
-                'UK': ['British Airways', 'Virgin Atlantic', 'Premier Inn', 'IHG Hotels UK']
-            },
-            'Telecommunications': {
-                'US': ['Verizon Business', 'AT&T Enterprise'],
-                'Canada': ['Bell Business', 'Rogers Business'],
-                'Europe': ['Deutsche Telekom', 'Orange Business'],
-                'UK': ['BT Business', 'Vodafone UK']
+        Returns:
+        - pd.DataFrame: Generated dataset.
+        """
+        self.logger.info("Generating synthetic transaction dataset...")
+        try:
+            # Initialize lists to store transaction data
+            transaction_ids = [f"TXN{str(i).zfill(6)}" for i in range(1, num_transactions + 1)]
+            timestamps = [self._random_timestamp() for _ in range(num_transactions)]
+            employee_ids = [random.choice(self.employee_ids) for _ in range(num_transactions)]
+            transaction_roles = [self._get_role(emp_id) for emp_id in employee_ids]
+            transaction_departments = [self._get_department(role) for role in transaction_roles]
+            merchants = [random.choice(self.merchants) for _ in range(num_transactions)]
+            merchant_regions = [random.choice(self.merchant_regions) for _ in range(num_transactions)]
+            categories = [random.choice(self.categories) for _ in range(num_transactions)]
+            mcc = [random.choice(self.mcc_codes) for _ in range(num_transactions)]
+            amounts = [round(random.uniform(10, 50000), 2) for _ in range(num_transactions)]
+            currencies = [random.choice(self.currencies) for _ in range(num_transactions)]
+            usd_amounts = [self._convert_to_usd(amount, currency) for amount, currency in zip(amounts, currencies)]
+            transaction_types = [random.choice(self.transaction_types) for _ in range(num_transactions)]
+            needs_approval = [random.choice([True, False]) for _ in range(num_transactions)]
+            approver_ids = [self._get_approver(emp_id) for emp_id in employee_ids]
+            self_approved = [random.choice([True, False]) for _ in range(num_transactions)]
+            is_anomaly = self._assign_anomalies(num_transactions, anomaly_ratio)
+            anomaly_types = [self._get_anomaly_type() if anomaly else np.nan for anomaly in is_anomaly]
+            approval_timestamps = [self._get_approval_timestamp(ts) if needs else pd.NaT for ts, needs in zip(timestamps, needs_approval)]
+            approver_roles = [self._get_role(approver_id) if approver_id != 'NONE' else 'NONE' for approver_id in approver_ids]
+            board_approval = [random.choice([True, False]) if role != 'BOARD' else False for role in transaction_roles]
+            transaction_country = [random.choice(self.transaction_countries) for _ in range(num_transactions)]
+            merchant_country = [random.choice(self.merchant_countries) for _ in range(num_transactions)]
+            
+            # Create DataFrame
+            data = {
+                'transaction_id': transaction_ids,
+                'timestamp': timestamps,
+                'employee_id': employee_ids,  # Renamed for consistency
+                'employee_role': transaction_roles,
+                'department': transaction_departments,
+                'merchant': merchants,
+                'merchant_region': merchant_regions,
+                'category': categories,
+                'mcc': mcc,
+                'amount': amounts,
+                'usd_amount': usd_amounts,
+                'currency': currencies,
+                'transaction_type': transaction_types,
+                'needs_approval': needs_approval,
+                'approver_id': approver_ids,
+                'self_approved': self_approved,
+                'is_anomaly': is_anomaly,
+                'anomaly_type': anomaly_types,
+                'approval_timestamp': approval_timestamps,
+                'approver_role': approver_roles,
+                'board_approval': board_approval,
+                'transaction_country': transaction_country,
+                'merchant_country': merchant_country
             }
-        }
-        
-        self.employees = self._generate_employee_profiles()
-    
-    def _generate_employee_profiles(self):
-        employees = []
-        roles = {
-            'ENG-JR': {'limit': 5000, 'weight': 0.3},
-            'ENG-SR': {'limit': 10000, 'weight': 0.3},
-            'TECH-LEAD': {'limit': 20000, 'weight': 0.15},
-            'ENG-MGR': {'limit': 50000, 'weight': 0.1},
-            'DIR': {'limit': 100000, 'weight': 0.1},
-            'VP': {'limit': 150000, 'weight': 0.04},
-            'EXEC': {'limit': 500000, 'weight': 0.01}
-        }
-        
-        departments = ['ENG', 'PROD', 'DEV', 'SEC', 'DATA', 'INFRA', 'QA', 'IT']
-        employee_ids = random.sample(range(100000, 999999), self.num_employees)
-        
-        for emp_id in employee_ids:
-            role = random.choices(list(roles.keys()), 
-                                weights=[r['weight'] for r in roles.values()])[0]
-            employees.append({
-                'employee_id': f'EMP{emp_id}',
-                'role': role,
-                'department': random.choice(departments),
-                'delegation_limit': roles[role]['limit'],
-                'manager_id': None
-            })
-        
-        # Assign managers
-        for emp in employees:
-            if emp['role'] != 'EXEC':
-                potential_managers = [e for e in employees 
-                                   if self._is_valid_manager(emp['role'], e['role'])]
-                if potential_managers:
-                    emp['manager_id'] = random.choice(potential_managers)['employee_id']
-        
-        return employees
-    
-    def _is_valid_manager(self, employee_role, manager_role):
-        role_hierarchy = ['ENG-JR', 'ENG-SR', 'TECH-LEAD', 'ENG-MGR', 'DIR', 'VP', 'EXEC']
-        return role_hierarchy.index(manager_role) > role_hierarchy.index(employee_role)
-    
-    def _generate_approval_timestamp(self, transaction_timestamp, is_anomalous=False):
-        if not is_anomalous:
-            min_delay = timedelta(minutes=5)
-            max_delay = timedelta(hours=24)
-            delay = min_delay + random.random() * (max_delay - min_delay)
-            approval_timestamp = transaction_timestamp + delay
             
-            while approval_timestamp.hour < 9 or approval_timestamp.hour >= 17 or approval_timestamp.weekday() >= 5:
-                approval_timestamp = approval_timestamp + timedelta(hours=random.randint(1, 4))
+            # Debugging: Ensure all columns have the correct length
+            self.logger.debug("Lengths of all columns before DataFrame creation:")
+            for col, lst in data.items():
+                self.logger.debug(f"{col}: {len(lst)}")
+            
+            # Verify that all lists have the same length
+            lengths = [len(lst) for lst in data.values()]
+            if len(set(lengths)) != 1:
+                mismatched_lengths = {}
+                for col, lst in data.items():
+                    mismatched_lengths[col] = len(lst)
+                self.logger.error(f"Mismatch in column lengths: {mismatched_lengths}")
+                raise ValueError("All arrays must be of the same length")
+            
+            df = pd.DataFrame(data)
+            self.logger.info("Dataset generation completed.")
+            return df
+        except Exception as e:
+            self.logger.error(f"Error during dataset generation: {str(e)}")
+            return None
+    
+    def _random_timestamp(self):
+        """Generates a random timestamp between start_date and end_date."""
+        delta = self.end_date - self.start_date
+        int_delta = delta.days * 24 * 60 * 60 + delta.seconds
+        random_second = random.randrange(int_delta)
+        return self.start_date + timedelta(seconds=random_second)
+    
+    def _get_role(self, emp_id):
+        """Assigns a role based on employee ID."""
+        # Simple example: Assign roles randomly
+        return random.choice(self.roles)
+    
+    def _get_department(self, role):
+        """Assigns a department based on role."""
+        # Simple example: Map roles to departments
+        role_department_map = {
+            'ENG-JR': 'Software',
+            'ENG-SR': 'Software',
+            'TECH-LEAD': 'Cloud Services',
+            'ENG-MGR': 'Office Supplies',
+            'DIR': 'Hardware',
+            'VP': 'Hardware',
+            'EXEC': 'Training',
+            'CEO': 'Executive',
+            'BOARD': 'Board'
+        }
+        return role_department_map.get(role, 'Unknown')
+    
+    def _get_approver(self, emp_id):
+        """Assigns an approver ID based on employee ID."""
+        # Simple example: Assign 'NONE' or another employee
+        if random.random() < 0.1:  # 10% chance of no approver
+            return 'NONE'
         else:
-            pattern_type = random.choice(['instant', 'delayed', 'off_hours', 'weekend'])
-            
-            if pattern_type == 'instant':
-                delay = timedelta(seconds=random.randint(5, 55))
-            elif pattern_type == 'delayed':
-                delay = timedelta(hours=random.randint(48, 168))
-            elif pattern_type == 'off_hours':
-                delay = timedelta(hours=random.randint(1, 24))
-                base_timestamp = transaction_timestamp + delay
-                approval_timestamp = base_timestamp.replace(
-                    hour=random.randint(0, 23) if random.random() < 0.5 else random.randint(0, 4),
-                    minute=random.randint(0, 59)
-                )
-                return approval_timestamp
-            elif pattern_type == 'weekend':
-                delay = timedelta(hours=random.randint(1, 72))
-                base_timestamp = transaction_timestamp + delay
-                while base_timestamp.weekday() < 5:
-                    base_timestamp += timedelta(days=1)
-                approval_timestamp = base_timestamp.replace(
-                    hour=random.randint(0, 23),
-                    minute=random.randint(0, 59)
-                )
-                return approval_timestamp
-            
-            approval_timestamp = transaction_timestamp + delay
-        
-        return approval_timestamp
+            return random.choice(self.employee_ids)
     
-    def _generate_transaction_date(self):
-        return self.start_date + timedelta(
-            seconds=random.randint(0, int((self.end_date - self.start_date).total_seconds()))
-        )
-    
-    def _generate_mcc_and_merchant(self):
-        region = random.choice(['US', 'Canada', 'Europe', 'UK'])
-        category = random.choice(list(self.merchants.keys()))
-        merchant = random.choice(self.merchants[category][region])
-        mcc = random.choice(list(self.mcc_codes.keys()))
-        return mcc, merchant, category, region
-    
-    def _generate_normal_transaction(self):
-        employee = random.choice(self.employees)
-        mcc, merchant, category, region = self._generate_mcc_and_merchant()
-        
-        currency = {
-            'US': 'USD',
-            'Canada': 'CAD',
-            'UK': 'GBP'
-        }.get(region, random.choice(['EUR', 'PLN']))
-        
-        usd_amount = round(random.uniform(10, min(employee['delegation_limit'], 139514)), 2)
-        amount = round(usd_amount / self.currencies[currency], 2)
-        
-        transaction_type = 'PURCHASE'
-        if random.random() < 0.1:
-            transaction_type = 'REFUND'
-            amount = -amount
-        
-        date = self._generate_transaction_date()
-        needs_approval = abs(usd_amount) > 100
-        approver_id = None
-        self_approved = False
-        
-        if needs_approval:
-            if random.random() < 0.05:
-                approver_id = employee['employee_id']
-                self_approved = True
-            else:
-                approver_id = employee['manager_id']
-        
-        return {
-            'transaction_id': f'TXN{random.randint(1000000000, 9999999999)}',
-            'timestamp': date,
-            'employee_id': employee['employee_id'],
-            'employee_role': employee['role'],
-            'department': employee['department'],
-            'merchant': merchant,
-            'merchant_region': region,
-            'category': category,
-            'mcc': mcc,
-            'amount': amount,
-            'currency': currency,
-            'usd_amount': usd_amount,
-            'transaction_type': transaction_type,
-            'needs_approval': needs_approval,
-            'approver_id': approver_id,
-            'self_approved': self_approved,
-            'is_anomaly': False,
-            'anomaly_type': None,
-            'approval_timestamp': self._generate_approval_timestamp(date, False) if needs_approval else None,
-            'approval_pattern': 'normal' if needs_approval else None
+    def _convert_to_usd(self, amount, currency):
+        """Converts amount to USD based on currency."""
+        conversion_rates = {
+            'USD': 1.0,
+            'EUR': 1.1,
+            'GBP': 1.3,
+            'JPY': 0.009,
+            'CAD': 0.75
         }
+        return round(amount * conversion_rates.get(currency, 1.0), 2)
     
-    def _generate_anomalous_transaction(self, base_transaction=None):
-        if base_transaction is None:
-            base_transaction = self._generate_normal_transaction()
-        
-        anomaly_types = ['duplicate', 'unusual_time', 'split_transaction', 
-                        'unusual_merchant', 'self_approval_violation']
-        anomaly_type = random.choice(anomaly_types)
-        
-        transaction = base_transaction.copy()
-        transaction['transaction_id'] = f'TXN{random.randint(1000000000, 9999999999)}'
-        transaction['is_anomaly'] = True
-        transaction['anomaly_type'] = anomaly_type
-        
-        if transaction['needs_approval']:
-            transaction['approval_timestamp'] = self._generate_approval_timestamp(
-                transaction['timestamp'], is_anomalous=True)
-            transaction['approval_pattern'] = 'anomalous'
-        
-        if anomaly_type == 'duplicate':
-            transaction['timestamp'] += timedelta(minutes=random.randint(1, 60))
-        elif anomaly_type == 'unusual_time':
-            transaction['timestamp'] = transaction['timestamp'].replace(
-                hour=random.randint(0, 23),
-                minute=random.randint(0, 59)
-            )
-        elif anomaly_type == 'split_transaction':
-            transaction['amount'] = transaction['amount'] / random.uniform(2, 4)
-            transaction['usd_amount'] = transaction['usd_amount'] / random.uniform(2, 4)
-            transaction['needs_approval'] = False
-        elif anomaly_type == 'unusual_merchant':
-            transaction['merchant'] = f'UNKNOWN-VENDOR-{random.randint(1000, 9999)}'
-            transaction['category'] = 'Unknown'
-            transaction['mcc'] = '7995'
-        elif anomaly_type == 'self_approval_violation':
-            if transaction['needs_approval']:
-                transaction['approver_id'] = transaction['employee_id']
-                transaction['self_approved'] = True
-        
-        return transaction
-    
-    def generate_dataset(self, num_transactions=25000, anomaly_ratio=0.05):
-        transactions = []
+    def _assign_anomalies(self, num_transactions, anomaly_ratio):
+        """Randomly assigns anomalies based on the specified ratio."""
         num_anomalies = int(num_transactions * anomaly_ratio)
-        num_normal = num_transactions - num_anomalies
-        
-        for _ in range(num_normal):
-            transactions.append(self._generate_normal_transaction())
-        
-        for _ in range(num_anomalies):
-            if random.random() < 0.3:
-                base_transaction = random.choice(transactions)
-                transactions.append(self._generate_anomalous_transaction(base_transaction))
-            else:
-                transactions.append(self._generate_anomalous_transaction())
-        
-        df = pd.DataFrame(transactions)
-        return df.sort_values('timestamp').reset_index(drop=True)
+        anomalies = [False] * num_transactions
+        if num_anomalies > 0:
+            anomaly_indices = random.sample(range(num_transactions), num_anomalies)
+            for idx in anomaly_indices:
+                anomalies[idx] = True
+        return anomalies
+    
+    def _get_anomaly_type(self):
+        """Randomly selects an anomaly type."""
+        anomaly_types = ['Amount Spike', 'Time Anomaly', 'Merchant Anomaly', 'Category Anomaly']
+        return random.choice(anomaly_types)
+    
+    def _get_approval_timestamp(self, transaction_timestamp):
+        """Generates an approval timestamp based on transaction timestamp."""
+        if pd.isna(transaction_timestamp):
+            return pd.NaT
+        # Approval is within 2 hours after transaction
+        approval_delay = timedelta(minutes=random.randint(1, 120))
+        return transaction_timestamp + approval_delay
