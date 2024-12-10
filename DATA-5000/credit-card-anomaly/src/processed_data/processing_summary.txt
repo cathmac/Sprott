@@ -1,6 +1,0 @@
-total_transactions: 25000
-total_employees: 3000
-date_range: 2024-01-03 00:20:35 to 2024-12-05 22:49:33
-anomaly_rate: 0.05
-features_generated: 16
-processing_date: 2024-12-09 23:36:03
