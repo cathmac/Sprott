@@ -1,0 +1,9 @@
+=== Transaction Analysis Summary ===
+
+Total Transactions: 25,000
+Total Amount (USD): $362,109,434.40
+Unique Employees: 3,000
+Normal Transactions: 23,750
+Anomalous Transactions: 1,250
+Transactions Needing Approval: 24,538
+Self-Approved Transactions: 1,517

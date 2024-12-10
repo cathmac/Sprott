@@ -1,0 +1,69 @@
+
+=== Basic Transaction Statistics ===
+Total Transactions: 25,000
+Date Range: 2024-01-03 00:20:35 to 2024-12-05 22:49:33
+Number of Unique Employees: 3,000
+Total Amount (USD): $362,109,434.40
+Average Transaction Amount: $14,484.38
+
+=== Transaction Distribution ===
+
+Transaction Types:
+transaction_type
+PURCHASE    22469
+REFUND       2531
+Name: count, dtype: int64
+
+Currency Distribution:
+currency
+USD    6396
+CAD    6218
+GBP    6145
+EUR    3133
+PLN    3108
+Name: count, dtype: int64
+
+Merchant Regions:
+merchant_region
+US        6396
+Europe    6241
+Canada    6218
+UK        6145
+Name: count, dtype: int64
+
+=== Anomaly Analysis ===
+Normal Transactions: 23,750
+Anomalous Transactions: 1,250
+Anomaly Rate: 5.00%
+
+Anomaly Types:
+anomaly_type
+unusual_time               273
+unusual_merchant           253
+split_transaction          250
+self_approval_violation    241
+duplicate                  233
+Name: count, dtype: int64
+
+=== Approval Analysis ===
+Transactions Requiring Approval: 24,538
+Transactions with Approvals: 24,787
+Self-Approved Transactions: 1,517
+
+Approval Timing:
+Average Approval Delay: 29.44 hours
+Median Approval Delay: 23.01 hours
+
+Approvals by Day:
+approval_day
+Monday       10249
+Thursday      3503
+Wednesday     3502
+Friday        3487
+Tuesday       3459
+Saturday       398
+Sunday         189
+Name: count, dtype: int64
+
+Off-Hours Approvals (11PM-4AM): 421
+Weekend Approvals: 587
