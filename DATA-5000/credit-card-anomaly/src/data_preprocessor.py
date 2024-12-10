@@ -11,8 +11,8 @@ class CreditCardDataPreprocessor:
         
     def load_data(self, file_path):
         """Load the credit card transaction data."""
-        print("Loading data from:", /Users/cathmac/Github/Sprott/DATA-5000/credit-card-anomaly/src/transaction_analysis_output/credit_card_transactions.csv)
-        return pd.read_csv(/Users/cathmac/Github/Sprott/DATA-5000/credit-card-anomaly/src/transaction_analysis_output/credit_card_transactions.csv)
+        print("Loading data from:", '/Users/cathmac/Github/Sprott/DATA-5000/credit-card-anomaly/src/transaction_analysis_output/credit_card_transactions.csv')
+        return pd.read_csv('/Users/cathmac/Github/Sprott/DATA-5000/credit-card-anomaly/src/transaction_analysis_output/credit_card_transactions.csv')
         
     def clean_data(self, df):
         """Clean the raw transaction data."""
