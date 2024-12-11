@@ -1,161 +1,150 @@
-import pandas as pd
-import numpy as np
-import logging
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import roc_auc_score, classification_report, confusion_matrix, roc_curve
-import matplotlib.pyplot as plt
-import seaborn as sns
-import joblib
 import os
+import joblib
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    roc_auc_score,
+    confusion_matrix,
+    classification_report,
+    precision_score,
+    recall_score,
+    f1_score,
+)
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+from imblearn.over_sampling import SMOTE
+from xgboost import XGBClassifier
+
 
 class AnomalyDetectionModel:
-    def __init__(self, config=None):
-        """
-        Initializes the AnomalyDetectionModel with configuration settings.
-        
-        Parameters:
-        - config (dict, optional): Configuration dictionary containing settings for the model.
-        """
-        self.config = config if config is not None else {}
-        self.model = RandomForestClassifier(random_state=42)
-        self.logger = logging.getLogger(self.__class__.__name__)
-        self.logger.setLevel(logging.INFO)
-        handler = logging.StreamHandler()
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
-        handler.setFormatter(formatter)
-        if not self.logger.handlers:
-            self.logger.addHandler(handler)
-    
-    def prepare_features_target(self, df):
-        """
-        Prepares the feature matrix X and target vector y for model training.
-        
-        Parameters:
-        - df (pd.DataFrame): Processed transaction DataFrame.
-        
-        Returns:
-        - X (pd.DataFrame): Feature matrix.
-        - y (pd.Series): Target vector.
-        """
-        self.logger.info("Preparing features and target for the model...")
-        # Example feature engineering
-        X = df.copy()
-        y = X['is_anomaly'].astype(int)
-        
-        # Drop columns that won't be used for modeling, including 'transaction_employee_ids'
-        drop_cols = [
-            'transaction_id', 'timestamp', 'transaction_employee_ids', 'approver_id', 'approval_timestamp',
-            'is_anomaly', 'anomaly_type', 'violations', 'is_valid', 'self_approved',
-            'board_approval', 'needs_approval'
-        ]
-        X.drop(columns=[col for col in drop_cols if col in X.columns], inplace=True)
-        
-        # Handle categorical variables
-        categorical_cols = [
-            'employee_role', 'department', 'merchant', 'merchant_region',
-            'category', 'currency', 'transaction_type', 'transaction_country',
-            'merchant_country'
-        ]
-        X = pd.get_dummies(X, columns=categorical_cols, drop_first=True)
-        
-        # Handle missing values if any
-        X.fillna(0, inplace=True)
-        
-        # Verify that no object/string columns remain
-        string_columns = X.select_dtypes(include=['object', 'category']).columns.tolist()
-        if string_columns:
-            self.logger.warning(f"The following string columns were not encoded and will be dropped: {string_columns}")
-            X.drop(columns=string_columns, inplace=True)
-        
-        self.logger.info("Feature preparation completed.")
-        return X, y
-    
+    def __init__(self, config=None, model_type="RandomForest"):
+        self.config = config
+        self.model_type = model_type
+        self.model = None
+
     def train_model(self, X_train, y_train):
-        """
-        Trains the anomaly detection model.
-        
-        Parameters:
-        - X_train (pd.DataFrame): Training feature matrix.
-        - y_train (pd.Series): Training target vector.
-        """
-        self.logger.info("Training the anomaly detection model...")
-        self.model.fit(X_train, y_train)
-        self.logger.info("Model training completed.")
-    
+        print(f"Training {self.model_type} model with hyperparameter tuning...")
+
+        # Handle missing values by imputing only numeric columns
+        numeric_columns = X_train.select_dtypes(include=[np.number]).columns
+
+        if X_train[numeric_columns].isnull().any().any():
+            print("Missing values detected in numeric columns of X_train. Imputing with mean values...")
+            X_train[numeric_columns] = X_train[numeric_columns].fillna(X_train[numeric_columns].mean())
+
+        # Drop rows with any remaining NaNs in X_train and ensure y_train is updated accordingly
+        initial_length = len(X_train)
+        X_train = X_train.dropna()
+        y_train = y_train.loc[X_train.index]
+
+        print(f"Dropped {initial_length - len(X_train)} rows due to remaining missing values.")
+
+        # Check the class distribution in y_train
+        class_counts = y_train.value_counts()
+        print(f"Class distribution in y_train after dropping missing values:\n{class_counts}")
+
+        if len(class_counts) < 2:
+            print("Warning: y_train contains only one class. Skipping SMOTE and training may not be meaningful.")
+            return
+
+        # Apply SMOTE for balancing classes
+        try:
+            smote = SMOTE(random_state=42)
+            X_train, y_train = smote.fit_resample(X_train, y_train)
+        except ValueError as e:
+            print(f"SMOTE failed due to: {e}")
+            return
+
+        # Define hyperparameter grids
+        if self.model_type == "RandomForest":
+            param_grid = {
+                'n_estimators': [100, 200],
+                'max_depth': [None, 10],
+                'min_samples_split': [2, 5],
+                'min_samples_leaf': [1, 2]
+            }
+            model = RandomForestClassifier(random_state=42)
+
+        elif self.model_type == "LogisticRegression":
+            param_grid = {
+                'C': [0.1, 1],
+                'penalty': ['l2'],
+                'solver': ['lbfgs', 'liblinear']
+            }
+            model = LogisticRegression(random_state=42, max_iter=1000)
+
+        elif self.model_type == "XGBoost":
+            param_grid = {
+                'n_estimators': [100, 200],
+                'max_depth': [3, 5],
+                'learning_rate': [0.01, 0.1],
+                'subsample': [0.8, 1.0],
+            }
+            model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+
+        else:
+            raise ValueError(f"Unsupported model type: {self.model_type}")
+
+        # Create a pipeline for scaling (if needed) and model
+        pipeline = Pipeline([
+            ('scaler', StandardScaler()),
+            ('classifier', model)
+        ])
+
+        # Perform grid search
+        try:
+            grid_search = GridSearchCV(pipeline, param_grid, cv=3, scoring='f1_weighted', n_jobs=-1)
+            grid_search.fit(X_train, y_train)
+            self.model = grid_search.best_estimator_
+            print(f"Best parameters for {self.model_type}: {grid_search.best_params_}")
+            print(f"{self.model_type} model training complete.")
+        except Exception as e:
+            print(f"Training failed due to: {e}")
+            self.model = None
+
     def evaluate_model(self, X_test, y_test):
-        """
-        Evaluates the trained model on the test set.
-        
-        Parameters:
-        - X_test (pd.DataFrame): Testing feature matrix.
-        - y_test (pd.Series): Testing target vector.
-        
-        Returns:
-        - dict: Evaluation metrics.
-        """
-        self.logger.info("Evaluating the model...")
+        if self.model is None:
+            print("Error: Model has not been trained. Cannot evaluate.")
+            return None
+
         y_pred = self.model.predict(X_test)
-        y_pred_proba = self.model.predict_proba(X_test)[:, 1]
-        
-        roc_auc = roc_auc_score(y_test, y_pred_proba)
-        report = classification_report(y_test, y_pred)
-        cm = confusion_matrix(y_test, y_pred)
-        
-        self.logger.info(f"ROC AUC Score: {roc_auc}")
-        self.logger.info(f"Classification Report:\n{report}")
-        self.logger.info(f"Confusion Matrix:\n{cm}")
-        
+
+        # Calculate metrics
+        roc_auc = roc_auc_score(y_test, y_pred)
+        conf_matrix = confusion_matrix(y_test, y_pred)
+        precision = precision_score(y_test, y_pred, average='weighted', zero_division=0)
+        recall = recall_score(y_test, y_pred, average='weighted', zero_division=0)
+        f1 = f1_score(y_test, y_pred, average='weighted', zero_division=0)
+        report = classification_report(y_test, y_pred, zero_division=0)
+
         return {
             'roc_auc': roc_auc,
-            'classification_report': report,
-            'confusion_matrix': cm,
-            'y_test': y_test,
-            'y_pred': y_pred,
-            'y_pred_proba': y_pred_proba
+            'confusion_matrix': conf_matrix,
+            'precision': precision,
+            'recall': recall,
+            'f1_score': f1,
+            'classification_report': report
         }
-    
+
     def plot_results(self, results):
-        """
-        Plots ROC Curve and Confusion Matrix.
-        
-        Parameters:
-        - results (dict): Evaluation metrics.
-        """
-        self.logger.info("Plotting evaluation results...")
-        
-        # ROC Curve
-        plt.figure(figsize=(8, 6))
-        fpr, tpr, _ = roc_curve(results['y_test'], results['y_pred_proba'])
-        plt.plot(fpr, tpr, label=f'ROC Curve (AUC = {results["roc_auc"]:.2f})')
-        plt.plot([0, 1], [0, 1], 'k--', label='Random Classifier')
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve')
-        plt.legend(loc='lower right')
-        roc_plot_file = os.path.join('transaction_analysis_output', 'roc_curve.png')
-        plt.savefig(roc_plot_file, dpi=300, bbox_inches='tight')
-        plt.close()
-        self.logger.info(f"ROC Curve saved to: {roc_plot_file}")
-        
-        # Confusion Matrix
-        plt.figure(figsize=(6, 5))
         cm = results['confusion_matrix']
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=['Normal', 'Anomalous'], yticklabels=['Normal', 'Anomalous'])
-        plt.xlabel('Predicted')
-        plt.ylabel('Actual')
+        plt.matshow(cm, cmap='Blues')
+        for (i, j), val in np.ndenumerate(cm):
+            plt.text(j, i, f'{val}', ha='center', va='center')
         plt.title('Confusion Matrix')
-        cm_plot_file = os.path.join('transaction_analysis_output', 'confusion_matrix.png')
-        plt.savefig(cm_plot_file, dpi=300, bbox_inches='tight')
-        plt.close()
-        self.logger.info(f"Confusion Matrix saved to: {cm_plot_file}")
-    
+        plt.colorbar()
+        plt.xlabel('Predicted')
+        plt.ylabel('True')
+        plt.show()
+
     def save_model(self, output_dir):
-        """
-        Saves the trained model to disk.
-        
-        Parameters:
-        - output_dir (str): Directory to save the model.
-        """
-        model_file = os.path.join(output_dir, 'anomaly_detection_model.joblib')
-        joblib.dump(self.model, model_file)
-        self.logger.info(f"Trained model saved to: {model_file}")
+        if self.model is not None:
+            model_path = os.path.join(output_dir, f"{self.model_type}_model.pkl")
+            joblib.dump(self.model, model_path)
+            print(f"Model saved to: {model_path}")
+        else:
+            print("No model to save.")
