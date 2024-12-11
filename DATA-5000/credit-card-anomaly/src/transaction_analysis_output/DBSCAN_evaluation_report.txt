@@ -14,3 +14,4 @@ Classification Report:
     accuracy                           0.00     600.0
    macro avg       0.00      0.00      0.00     600.0
 weighted avg       0.00      0.00      0.00     600.0
+

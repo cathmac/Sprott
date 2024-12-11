@@ -138,3 +138,4 @@ def save_analysis_results(df, report_file):
         f.write(f"Self-Approved Transactions: {self_approved:,}\n")
     
     logger.info(f"Analysis results saved to: {report_file}")
+

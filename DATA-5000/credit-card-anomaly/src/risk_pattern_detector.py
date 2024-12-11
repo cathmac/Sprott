@@ -81,3 +81,4 @@ class RiskPatternDetector:
         except Exception as e:
             self.logger.error(f"Error during risk detection: {str(e)}")
             raise e
+

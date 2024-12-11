@@ -148,3 +148,4 @@ class AnomalyDetectionModel:
             print(f"Model saved to: {model_path}")
         else:
             print("No model to save.")
+

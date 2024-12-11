@@ -73,3 +73,4 @@ class AnomalyDetectionModel:
         roc_auc = roc_auc_score(y_test, y_pred, average='weighted')
         conf_matrix = confusion_matrix(y_test, y_pred)
         precision = precision_score(y
+
