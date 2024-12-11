@@ -1,0 +1,15 @@
+Model: EllipticEnvelope
+ROC AUC: 0.4983
+Precision: 0.4718
+Recall: 0.4983
+F1 Score: 0.3440
+
+Classification Report:
+              precision    recall  f1-score   support
+
+       False       0.44      0.01      0.03       300
+        True       0.50      0.98      0.66       300
+
+    accuracy                           0.50       600
+   macro avg       0.47      0.50      0.34       600
+weighted avg       0.47      0.50      0.34       600

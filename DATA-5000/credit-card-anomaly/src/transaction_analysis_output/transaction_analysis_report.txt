@@ -1,53 +1,53 @@
 === Basic Transaction Statistics ===
-Total Transactions: 25,000
+Total Transactions: 50,000
 Date Range: 2024-01-03 00:05:18 to 2024-12-05 23:55:01
-Number of Unique Employees: 2,999
-Total Amount (USD): $523,607,620.01
-Average Transaction Amount: $20944.30
+Number of Unique Employees: 3,000
+Total Amount (USD): $1,042,890,798.94
+Average Transaction Amount: $20857.82
 
 === Transaction Distribution ===
 
 Transaction Types:
 transaction_type
-Refund        6318
-Withdrawal    6261
-Purchase      6255
-Transfer      6166
+Refund        12711
+Purchase      12517
+Transfer      12426
+Withdrawal    12346
 Name: count, dtype: int64
 
 Currency Distribution:
 currency
-GBP    5039
-EUR    5036
-USD    5024
-CAD    4997
-JPY    4904
+GBP    10168
+EUR    10019
+USD    10011
+JPY     9942
+CAD     9860
 Name: count, dtype: int64
 
 Merchant Regions:
 merchant_region
-Africa           4235
-South America    4199
-Asia             4173
-Europe           4151
-Australia        4121
-North America    4121
+Africa           8455
+Asia             8426
+North America    8334
+Europe           8321
+South America    8249
+Australia        8215
 Name: count, dtype: int64
 
 === Anomaly Analysis ===
-Normal Transactions: 23,750
-Anomalous Transactions: 1,250
-Anomaly Rate: 5.00%
+Normal Transactions: 49,000
+Anomalous Transactions: 1,000
+Anomaly Rate: 2.00%
 
 Anomaly Types:
 anomaly_type
-Time Anomaly        327
-Amount Spike        309
-Category Anomaly    308
-Merchant Anomaly    306
+Category Anomaly    261
+Time Anomaly        257
+Merchant Anomaly    243
+Amount Spike        239
 Name: count, dtype: int64
 
 === Approval Analysis ===
-Transactions Requiring Approval: 12,478
-Transactions with Approvals: 22,533
-Self-Approved Transactions: 12,615
+Transactions Requiring Approval: 24,797
+Transactions with Approvals: 44,942
+Self-Approved Transactions: 25,204

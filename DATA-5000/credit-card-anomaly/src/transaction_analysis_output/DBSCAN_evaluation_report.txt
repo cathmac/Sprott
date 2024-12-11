@@ -1,0 +1,16 @@
+Model: DBSCAN
+ROC AUC: 0.5000
+Precision: 0.0000
+Recall: 0.0000
+F1 Score: 0.0000
+
+Classification Report:
+              precision    recall  f1-score   support
+
+          -1       0.00      0.00      0.00       0.0
+           0       0.00      0.00      0.00     300.0
+           1       0.00      0.00      0.00     300.0
+
+    accuracy                           0.00     600.0
+   macro avg       0.00      0.00      0.00     600.0
+weighted avg       0.00      0.00      0.00     600.0
