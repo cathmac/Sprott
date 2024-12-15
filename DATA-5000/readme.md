@@ -159,9 +159,3 @@ The DOA policy is defined in `delegation_of_authority_policy.md` and enforced by
 
 ---
 
-## Contact
-
-For issues or questions, please reach out to the project maintainer.
-
----
-
